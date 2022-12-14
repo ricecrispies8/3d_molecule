@@ -102,7 +102,7 @@ class Chem_API():
                             z='Z Coord',
                             color='Atom', 
                             size='Size', 
-                            size_max=70, 
+                            size_max=50, 
                             opacity=1)
 
         trace2 = px.line_3d(bonds, x='X_coords', y='Y_coords', z='Z_coords', 
@@ -112,6 +112,7 @@ class Chem_API():
         fig=go.Figure(data=trace1.data + trace2.data)
 
         fig.update_layout(margin=dict(l=0, r=0, b=0, t=30),
-                        title=f'{self.name.capitalize()} 3D Plot')
+                          title=f'{self.name.capitalize()} 3D Plot',
+                          width=700, height=700)
         return fig
 
