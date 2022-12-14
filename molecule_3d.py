@@ -113,6 +113,6 @@ class Chem_API():
 
         fig.update_layout(margin=dict(l=0, r=0, b=0, t=30),
                           title=f'{self.name.capitalize()} 3D Plot',
-                          width=700, height=700)
+                          width=800, height=800)
         return fig
 
