@@ -41,15 +41,16 @@ class Chem_API():
         coordinates = json_file_3d['PC_Compounds'][0]['coords'][0]
 
         # Create DataFrame with all these specs
-        compound_atoms = pd.DataFrame(columns=['ID', 'Atom', 'Size','X', 'Y', 'Z'])
+        compound_atoms = pd.DataFrame(columns=['ID', 'Atom', 'Size',
+        'X Coord', 'Y Coord', 'Z Coord'])
 
         compound_atoms['ID'] = coordinates['aid']
         compound_atoms['Atom'] = json_file_3d['PC_Compounds'][0]['atoms']['element']
         compound_atoms['Size'] = compound_atoms['Atom'].replace(self.atom_weights)
         compound_atoms['Atom'] = compound_atoms['Atom'].replace(self.atom_names)
-        compound_atoms['X'] = coordinates['conformers'][0]['x']
-        compound_atoms['Y'] = coordinates['conformers'][0]['y']
-        compound_atoms['Z'] = coordinates['conformers'][0]['z']
+        compound_atoms['X Coord'] = coordinates['conformers'][0]['x']
+        compound_atoms['Y Coord'] = coordinates['conformers'][0]['y']
+        compound_atoms['Z Coord'] = coordinates['conformers'][0]['z']
 
         compound_atoms = compound_atoms.set_index('ID')
 
@@ -82,9 +83,9 @@ class Chem_API():
     
     # Combine all axes coordinates into dataframe
     def bonds_coord_combined(self):
-        X_list = self.bond_coordinates('X')[0]
-        Y_list = self.bond_coordinates('Y')[0]
-        Z_list = self.bond_coordinates('Z')[0]
+        X_list = self.bond_coordinates('X Coord')[0]
+        Y_list = self.bond_coordinates('Y Coord')[0]
+        Z_list = self.bond_coordinates('Z Coord')[0]
 
         bonds = pd.DataFrame({'X_coords': X_list, 'Y_coords': Y_list, 'Z_coords': Z_list})
 
@@ -95,7 +96,10 @@ class Chem_API():
         compound = self.atomic_df()
         bonds = self.bonds_coord_combined()
 
-        trace1 = px.scatter_3d(compound, x='X', y='Y', z='Z',
+        trace1 = px.scatter_3d(compound, 
+                            x='X Coord', 
+                            y='Y Coord', 
+                            z='Z Coord',
                             color='Atom', 
                             size='Size', 
                             size_max=70, 
@@ -107,9 +111,7 @@ class Chem_API():
 
         fig=go.Figure(data=trace1.data + trace2.data)
 
-        fig.update_layout(margin=dict(l=0, r=40, b=0, t=30),
+        fig.update_layout(margin=dict(l=0, r=0, b=0, t=30),
                         title=f'{self.name.capitalize()} 3D Plot')
-        fig.show()
+        return fig
 
-compound = Chem_API('fructose', 'name')
-compound.plot_3d()
