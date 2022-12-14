@@ -4,10 +4,4 @@ bs4
 igraph
 pubchempy
 plotly
-igraph==0.10.2
-torch
-torch-scatter 
-torch-sparse 
-torch-cluster 
-torch-spline-conv 
-torch-geometric
+streamlit
