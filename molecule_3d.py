@@ -103,16 +103,28 @@ class Chem_API():
                             color='Atom', 
                             size='Size', 
                             size_max=50, 
-                            opacity=1)
+                            opacity=1,
+                            custom_data=['X Coord', 'Y Coord', 'Z Coord', 'Atom', 'Size'])
 
         trace2 = px.line_3d(bonds, x='X_coords', y='Y_coords', z='Z_coords', 
                             color_discrete_sequence=['black'])
-        trace2.update_traces(hovertemplate = None, hoverinfo = "skip", line=dict(width=10))
+
+        labels = '<b>Atom Name</b>: %{customdata[3]}<br>' + \
+                 '<b>Atom Weight</b>: %{customdata[4]}<br>' + \
+                 '<b>X Coord</b>: %{customdata[0]}<br>' + \
+                 '<b>Y Coord</b>: %{customdata[1]}<br>' + \
+                 '<b>Z Coord</b>: %{customdata[2]}<br>'
+
+        trace1.update_traces(hovertemplate=labels)
+
+        trace2.update_traces(hovertemplate = None, 
+                             hoverinfo = "skip", 
+                             line=dict(width=10))
 
         fig=go.Figure(data=trace1.data + trace2.data)
 
         fig.update_layout(margin=dict(l=0, r=0, b=0, t=30),
-                          title=f'{self.name.capitalize()} 3D Plot',
+                          #title=f'{self.name.capitalize()} 3D Plot',
                           width=700, height=700)
         return fig
 
