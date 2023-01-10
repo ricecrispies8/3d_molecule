@@ -1,5 +1,6 @@
 import requests
 import pandas as pd
+import numpy as np
 import json
 import plotly.express as px
 import plotly.graph_objects as go
@@ -12,9 +13,10 @@ class Chem_API():
     atom_names = elements_dict['Name']
     atom_weights = elements_dict['Atomic_Mass']
 
-    def __init__(self, name, data_type):
+    def __init__(self, name, data_type, conformer = 0):
         self.name = name    
         self.data_type = data_type
+        self.conformer = conformer
 
     # Searches PUG API for compound and return JSON file
     def get_conformers(self):
@@ -24,7 +26,7 @@ class Chem_API():
             response = requests.get(f'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{self.name}/conformers/json')
         
         json_conformers = response.json()
-        conformer_id = json_conformers['InformationList']['Information'][0]['ConformerID'][0]
+        conformer_id = json_conformers['InformationList']['Information'][0]['ConformerID'][self.conformer]
         CID = json_conformers['InformationList']['Information'][0]['CID']
         return conformer_id, CID
     
@@ -35,6 +37,23 @@ class Chem_API():
         json_file_3d = response.json()
         return json_file_3d
     
+    # Get average of conformer coordinates 
+    # def average_coordinates(self):
+    #     x = []
+    #     y = []
+    #     z = []
+    #     conformer_ids = self.get_conformers()[0]
+    #     for i in conformer_ids:
+    #         response = requests.get(f'https://pubchem.ncbi.nlm.nih.gov/rest/pug/conformers/{i}/json')
+    #         json_file_3d = response.json()
+    #         x.append(json_file_3d['PC_Compounds'][0]['coords'][0]['conformers'][0]['x'])
+    #         y.append(json_file_3d['PC_Compounds'][0]['coords'][0]['conformers'][0]['y'])
+    #         z.append(json_file_3d['PC_Compounds'][0]['coords'][0]['conformers'][0]['z'])
+    #     Xs = pd.DataFrame(x).T
+    #     Ys = pd.DataFrame(y).T
+    #     Zs = pd.DataFrame(z).T
+    #     return Xs, Ys, Zs
+
     # Create DataFrame with all these specs
     def atomic_df(self):
         json_file_3d = self.get_atoms_json()
@@ -127,4 +146,3 @@ class Chem_API():
                           #title=f'{self.name.capitalize()} 3D Plot',
                           width=700, height=700)
         return fig
-

@@ -23,12 +23,14 @@ Watch for additional features in the near future!
 
 compound_name = st.text_input('Enter in the name of a compound:', 'Fructose')
 
+conformer_num = st.text_input("# of conformer", '0')
+
 random_cid = random.randint(0,100)
-suggestions = f
+suggestions = 'f'
 
 st.markdown("_Not sure what ")
 
-compound = Chem_API(compound_name, 'name')
+compound = Chem_API(compound_name, 'name', int(conformer_num))
 
 tab1, tab2 = st.tabs(["Chart", "Data"])
 
