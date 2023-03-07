@@ -1,7 +1,4 @@
 requests
 pandas
-bs4
-igraph
-pubchempy
 plotly
 streamlit
